@@ -1,6 +1,7 @@
 from django.db import models
 from django.conf import settings
 
+
 class Note(models.Model):
     """
     投稿記事モデル
@@ -23,11 +24,14 @@ class Note(models.Model):
     created_at = models.DateTimeField('投稿日', auto_now_add=True)
     updated_at = models.DateTimeField('更新日', auto_now=True)
 
+    open_range = models.CharField("公開範囲", default="subscribers", max_length=20)
+
     class Meta:
         db_table = "notes"
 
     def __str__(self):
         return f"{self.pk} {self.title}"
+
 
 class Comment(models.Model):
     """
@@ -39,7 +43,7 @@ class Comment(models.Model):
                                    on_delete=models.CASCADE)
     created_at = models.DateTimeField('投稿日', auto_now_add=True)
     updated_at = models.DateTimeField('更新日', auto_now=True)
-    note_to = models.ForeignKey(Note,verbose_name="投稿",on_delete=models.CASCADE)
+    note_to = models.ForeignKey(Note, verbose_name="投稿", on_delete=models.CASCADE)
 
     class Meta:
         db_table = "comments"
@@ -53,7 +57,7 @@ class Tag(models.Model):
     タグモデル
     """
     tag_name = models.CharField("タグ", max_length=30)
-    note_to = models.ManyToManyField(Note, verbose_name="投稿",related_query_name="tag")
+    note_to = models.ManyToManyField(Note, verbose_name="投稿", related_query_name="tag")
 
     class Meta:
         db_table = "tags"
