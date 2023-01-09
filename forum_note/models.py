@@ -45,7 +45,7 @@ class Comment(models.Model):
                                    on_delete=models.CASCADE)
     created_at = models.DateTimeField('投稿日', auto_now_add=True)
     updated_at = models.DateTimeField('更新日', auto_now=True)
-    note_to = models.ForeignKey(Note, verbose_name="投稿", on_delete=models.CASCADE,related_name="comments")
+    note_to = models.ForeignKey(Note, verbose_name="投稿", on_delete=models.CASCADE, related_name="comments")
 
     class Meta:
         db_table = "comments"
@@ -53,12 +53,14 @@ class Comment(models.Model):
     def __str__(self):
         return f"{self.pk} {self.created_by} comment"
 
+
 class Tag(models.Model):
     """
     タグモデル
     """
     tag_name = models.CharField("タグ", max_length=30)
     note_to = models.ManyToManyField(Note, verbose_name="投稿", related_query_name="tags")
+    search_word = models.CharField("検索値", max_length=20, default="default")
 
     class Meta:
         db_table = "tags"

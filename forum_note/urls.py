@@ -22,6 +22,6 @@ urlpatterns = [
     path("create/", views.NotePost, name="note_post"),
     path("g/<slug:group>/", views.NoteListGroup.as_view(), name="note_list_group"),
     path("<slug:range>/", views.NoteListRange.as_view(), name="note_list_range"),
-    path("tag/<slug:tag_name>/", views.NoteListTag, name="note_list_tag"),
+    path("tag/<slug:tag_word>/", views.NoteListTag.as_view(), name="note_list_tag"),
     path("entry/<int:pk>/", views.NoteDetail, name="note_detail"),
 ]

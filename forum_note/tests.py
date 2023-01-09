@@ -8,6 +8,25 @@ UserModel = get_user_model()
 
 
 # Create your tests here.
+class NotePostPageTest(TestCase):
+    pass
+    # ログインしていないとき404エラーを返すか
+
+    # URLとビュー関数が一致しているか
+
+    # ログインしたとき200のステータスコードを返すか
+
+    # postメソッドで302のリダイレクトのステータスコードを返すか
+
+    # 投稿後のページを表示しているか
+
+    # データベースに作成した投稿が登録されているか
+
+    # 空の送信時に400エラーを返すか
+
+    # python_studentの権限を持っている場合、投稿範囲にpythonゼミ限定を表示するか
+
+    # python_studentの権限を持っている場合、投稿範囲にpythonゼミ限定を表示されないか
 class NoteListPageTest(TestCase):
     def setUp(self):
         self.factory = RequestFactory()
@@ -54,10 +73,12 @@ class NoteListPageTest(TestCase):
         )
         tag_to_python = Tag.objects.create(
             tag_name="python_tag",
+            search_word="python",
         )
         tag_to_python.note_to.add(note_python)
         tag_to_subscribe = Tag.objects.create(
             tag_name="subscribe_tag",
+            search_word="subscribe",
         )
         tag_to_subscribe.note_to.add(note_subscribe)
 
@@ -169,7 +190,22 @@ class NoteListPageTest(TestCase):
         self.assertNotContains(response, "Pythonゼミ参加者")
         self.assertContains(response, "定額コース利用者限定")
 
-    # タグを選択肢し、対象の記事のみ表示されるか
+    # tag/pythonで、対象の記事のみ表示されるか
+    def test_should_display_note_match_tag(self):
+        self.client.force_login(self.user_admin)
+        url = reverse("note:note_list_tag", kwargs={"tag_word": "python"})
+        response = self.client.get(url)
+        self.assertContains(response, "pyton_title")
+        self.assertNotContains(response, "subscribe_title")
+        self.assertNotContains(response, "public_title")
+
+    # tag/pythonで、対象のタグのみ表示されるか
+    def test_should_display_match_tag(self):
+        self.client.force_login(self.user_admin)
+        url = reverse("note:note_list_tag", kwargs={"tag_word": "python"})
+        response = self.client.get(url)
+        self.assertContains(response, "python_tag")
+        self.assertNotContains(response, "subscribe_tag")
 
     # 絞り込みにpostし、対象の記事のみ表示されるか
 
@@ -180,28 +216,6 @@ class NoteListPageTest(TestCase):
         response = self.client.get(url)
         self.assertContains(response, "コメント数：1件")
         self.assertNotContains(response, "コメント数：0件")
-
-
-class NotePostPageTest(TestCase):
-    pass
-    # ログインしていないとき404エラーを返すか
-
-    # URLとビュー関数が一致しているか
-
-    # ログインしたとき200のステータスコードを返すか
-
-    # postメソッドで302のリダイレクトのステータスコードを返すか
-
-    # 投稿後のページを表示しているか
-
-    # データベースに作成した投稿が登録されているか
-
-    # 空の送信時に400エラーを返すか
-
-    # python_studentの権限を持っている場合、投稿範囲にpythonゼミ限定を表示するか
-
-    # python_studentの権限を持っている場合、投稿範囲にpythonゼミ限定を表示されないか
-
 
 class NoteDetailPageTest(TestCase):
     pass

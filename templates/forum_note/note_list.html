@@ -20,17 +20,17 @@
   <div class="tag mt-3">
     <p class="fw-bold fs-6">タグで絞り込み：</p>
     {% for tag in tags %}
-    <a class="btn btn-success btn-sm" href="{% url 'note:note_list_range' range='test' %}" role="button">{{ tag.tag_name }}</a>
+    <a class="btn btn-success btn-sm" href="{% url 'note:note_list_tag' tag_word=tag.search_word %}" role="button">{{ tag.tag_name }}</a>
     {% endfor %}
   </div>
   <div class="search mt-3 border-bottom pb-3">
     <p class="fw-bold fs-6">キーワードで絞り込み：</p>
     <div class="input-group mb-3">
-      <form action="get">
+      <form action="{{ request.build_absolute_uri }}" method="get">
         {% csrf_token %}
         <div class="input-group input-group-sm">
-          <input type="text" class="form-control" placeholder="投稿/コメントを検索">
-          <button class="btn btn-primary" type="button" id="button-addon2"><i class="fas fa-search"></i>絞り込む</button>
+          <input name="keyword" type="text" class="form-control" placeholder="投稿/コメントを検索">
+          <button class="btn btn-primary" type="submit" id="button-addon2"><i class="fas fa-search"></i>絞り込む</button>
         </div>
       </form>
     </div>
@@ -46,8 +46,8 @@
                 <a class="btn btn-success btn-sm" href="{% url 'note:note_list_range' range='index' %}" role="button">この投稿の範囲:すべて表示</a>
               </div>
               <div class="tag mt-1">
-              {% for tag in note.tags.all %}
-                <a class="btn btn-success btn-sm" href="{% url 'note:note_list_range' range='index' %}" role="button">{{ tag.tag_name }}</a>
+              {% for tag in note.tag_set.all %}
+                <a class="btn btn-success btn-sm" href="{% url 'note:note_list_tag' tag_word=tag.search_word %}" role="button">{{ tag.tag_name }}</a>
               {% endfor %}
               </div>
               <a href="#" class="font-weight-bold">{{ note.title }}</a>
@@ -69,8 +69,8 @@
                 <a class="btn btn-success btn-sm" href="{% url 'note:note_list_range' range='index' %}" role="button">この投稿の範囲:すべて表示</a>
               </div>
               <div class="tag mt-1">
-              {% for tag in note.tags.all %}
-                <a class="btn btn-success btn-sm" href="{% url 'note:note_list_range' range='index' %}" role="button">{{ tag.tag_name }}</a>
+              {% for tag in note.tag_set.all %}
+                <a class="btn btn-success btn-sm" href="{% url 'note:note_list_tag' tag_word=tag.search_word %}" role="button">{{ tag.tag_name }}</a>
               {% endfor %}
               </div>
               <a href="#" class="font-weight-bold">{{ note.title }}</a>
@@ -91,9 +91,9 @@
               <a class="btn btn-success btn-sm" href="{% url 'note:note_list_range' range='index' %}" role="button">この投稿の範囲:すべて表示</a>
             </div>
             <div class="tag mt-1">
-            {% for tag in note.tags.all %}
-              <a class="btn btn-success btn-sm" href="{% url 'note:note_list_range' range='index' %}" role="button">{{ tag.tag_name }}</a>
-            {% endfor %}
+              {% for tag in note.tag_set.all %}
+                <a class="btn btn-success btn-sm" href="{% url 'note:note_list_tag' tag_word=tag.search_word %}" role="button">{{ tag.tag_name }}</a>
+              {% endfor %}
             </div>
             <a href="#" class="font-weight-bold">{{ note.title }}</a>
             <p><span class="fw-bold">{{ note.created_by.username }}</span>の投稿</p>
