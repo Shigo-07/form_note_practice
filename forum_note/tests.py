@@ -47,6 +47,19 @@ class NoteListPageTest(TestCase):
             open_range="subscribers",
             created_by=self.user,
         )
+        comment_to_note = Comment.objects.create(
+            content="comment",
+            created_by=self.user_python,
+            note_to=note_python,
+        )
+        tag_to_python = Tag.objects.create(
+            tag_name="python_tag",
+        )
+        tag_to_python.note_to.add(note_python)
+        tag_to_subscribe = Tag.objects.create(
+            tag_name="subscribe_tag",
+        )
+        tag_to_subscribe.note_to.add(note_subscribe)
 
     # ログインしていないとき404エラーを返すか
     def test_should_return_404_if_user_does_not_login(self):
@@ -124,9 +137,21 @@ class NoteListPageTest(TestCase):
         self.assertNotContains(response, "subscribe_title")
         self.assertContains(response, "public_title")
 
-    # python_membersへアクセスし、pythonゼミの記事のタグのみ表示されるか
+    # user.python_student=Tureでindexへアクセスし、pythonゼミの記事のタグのみ表示されるか
+    def test_should_display_only_python_tag(self):
+        self.client.force_login(self.user_python)
+        url = reverse("note:note_list_range", kwargs={"range": "index"})
+        response = self.client.get(url)
+        self.assertContains(response, "python_tag")
+        self.assertNotContains(response, "subscribe_tag")
 
-    # subscribersへアクセスし、定額コースの記事のタグのみ表示されるか
+    # user.staff=Tureでindexへアクセスし、定額コースの記事のタグのみ表示されるか
+    def test_should_display_only_subscribe_tag(self):
+        self.client.force_login(self.user_staff)
+        url = reverse("note:note_list_range", kwargs={"range": "index"})
+        response = self.client.get(url)
+        self.assertNotContains(response, "python_tag")
+        self.assertContains(response, "subscribe_tag")
 
     # user.python_student=Trueの場合,Pythonゼミ参加者の絞り込みが表示されるか
     def test_should_display_python_search_if_user_python(self):
@@ -147,6 +172,14 @@ class NoteListPageTest(TestCase):
     # タグを選択肢し、対象の記事のみ表示されるか
 
     # 絞り込みにpostし、対象の記事のみ表示されるか
+
+    # コメントの件数が表示されるか
+    def test_should_display_comment_number(self):
+        self.client.force_login(self.user_python)
+        url = reverse("note:note_list_group", kwargs={"group": "python_members"})
+        response = self.client.get(url)
+        self.assertContains(response, "コメント数：1件")
+        self.assertNotContains(response, "コメント数：0件")
 
 
 class NotePostPageTest(TestCase):

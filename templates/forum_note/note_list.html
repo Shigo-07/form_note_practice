@@ -12,14 +12,16 @@
     <a class="btn btn-success btn-sm" href="{% url 'note:note_list_range' range='public' %}" role="button">公開投稿のみ表示</a>
     {% if user.python_student %}
     <a class="btn btn-success btn-sm" href="{% url 'note:note_list_group' group='python_members' %}" role="button">Pythonゼミ参加者</a>
-    {% elif user.staff %}
+    {% endif %}
+    {% if user.staff %}
     <a class="btn btn-success btn-sm" href="{% url 'note:note_list_group' group='subscribers' %}" role="button">定額コース利用者限定</a>
     {% endif %}
   </div>
   <div class="tag mt-3">
     <p class="fw-bold fs-6">タグで絞り込み：</p>
-    <a class="btn btn-success btn-sm" href="{% url 'note:note_list_range' range='test' %}" role="button">すべて表示</a>
-    <a class="btn btn-success btn-sm" href="{% url 'note:note_list_range' range='test' %}" role="button">公開投稿のみ表示</a>
+    {% for tag in tags %}
+    <a class="btn btn-success btn-sm" href="{% url 'note:note_list_range' range='test' %}" role="button">{{ tag.tag_name }}</a>
+    {% endfor %}
   </div>
   <div class="search mt-3 border-bottom pb-3">
     <p class="fw-bold fs-6">キーワードで絞り込み：</p>
