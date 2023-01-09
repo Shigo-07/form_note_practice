@@ -17,9 +17,11 @@ from django.contrib import admin
 from django.urls import path, include
 from forum_note import views
 
+app_name = "note"
 urlpatterns = [
-    path("<slug:range>/", views.NoteListRange, name="note_list_range"),
-    path("tag/<slug:tag_name>/", views.NoteListTag, name="note_list_tag"),
     path("create/", views.NotePost, name="note_post"),
+    path("g/<slug:group>/", views.NoteListGroup.as_view(), name="note_list_group"),
+    path("<slug:range>/", views.NoteListRange.as_view(), name="note_list_range"),
+    path("tag/<slug:tag_name>/", views.NoteListTag, name="note_list_tag"),
     path("entry/<int:pk>/", views.NoteDetail, name="note_detail"),
 ]

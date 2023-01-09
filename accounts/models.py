@@ -13,7 +13,6 @@ class UserManager(BaseUserManager):
         user.set_password(password)
         user.save(using=self._db)
         return user
-
     def create_staffuser(self, email, password):
         user = self.create_user(
             email,
@@ -21,6 +20,16 @@ class UserManager(BaseUserManager):
         )
         user.staff = True
         user.python_student = True
+        user.save(using=self._db)
+        return
+    def create_customuser(self, email, password, staff=False, python_student=False, admin=False):
+        user = self.create_user(
+            email,
+            password=password,
+        )
+        user.staff = staff
+        user.python_student = python_student
+        user.admin = admin
         user.save(using=self._db)
         return user
 
@@ -41,6 +50,11 @@ class User(AbstractBaseUser):
         verbose_name="Eメールアドレス",
         max_length=255,
         unique=True
+    )
+    username = models.CharField(
+        "ユーザー名",
+        max_length=150,
+        default="名無しさん"
     )
     active = models.BooleanField(default=True)
     admin = models.BooleanField(default=False)

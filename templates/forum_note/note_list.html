@@ -1,0 +1,114 @@
+{% extends "base.html" %}
+{% block head_title %}フォーラム投稿一覧{% endblock %}
+{% block content %}
+<div class="container">
+  <div class="post mt-5 border-bottom">
+    <a class="btn btn-primary" href="{% url 'note:note_post' %}" role="button">公開設定で新規投稿する</a>
+    <p>投稿先は、以下の「投稿先で絞りこみ」から変更できます。</p>
+  </div>
+  <div class="open_range mt-3">
+    <p class="fw-bold fs-6">投稿先で絞り込み：</p>
+    <a class="btn btn-success btn-sm" href="{% url 'note:note_list_range' range='index' %}" role="button">すべて表示</a>
+    <a class="btn btn-success btn-sm" href="{% url 'note:note_list_range' range='public' %}" role="button">公開投稿のみ表示</a>
+    {% if user.python_student %}
+    <a class="btn btn-success btn-sm" href="{% url 'note:note_list_group' group='python_members' %}" role="button">Pythonゼミ参加者</a>
+    {% elif user.staff %}
+    <a class="btn btn-success btn-sm" href="{% url 'note:note_list_group' group='subscribers' %}" role="button">定額コース利用者限定</a>
+    {% endif %}
+  </div>
+  <div class="tag mt-3">
+    <p class="fw-bold fs-6">タグで絞り込み：</p>
+    <a class="btn btn-success btn-sm" href="{% url 'note:note_list_range' range='test' %}" role="button">すべて表示</a>
+    <a class="btn btn-success btn-sm" href="{% url 'note:note_list_range' range='test' %}" role="button">公開投稿のみ表示</a>
+  </div>
+  <div class="search mt-3 border-bottom pb-3">
+    <p class="fw-bold fs-6">キーワードで絞り込み：</p>
+    <div class="input-group mb-3">
+      <form action="get">
+        {% csrf_token %}
+        <div class="input-group input-group-sm">
+          <input type="text" class="form-control" placeholder="投稿/コメントを検索">
+          <button class="btn btn-primary" type="button" id="button-addon2"><i class="fas fa-search"></i>絞り込む</button>
+        </div>
+      </form>
+    </div>
+  </div>
+  <div class="note_list mt-3">
+    <div class="note border-bottom pb-2">
+
+      <div class="note_info mt-1">
+        {% for note in notes %}
+          {% if note.open_range == "python_members"  %}
+            {% if user.python_student %}
+              <div class="open_range_note">
+                <a class="btn btn-success btn-sm" href="{% url 'note:note_list_range' range='index' %}" role="button">この投稿の範囲:すべて表示</a>
+              </div>
+              <div class="tag mt-1">
+              {% for tag in note.tags.all %}
+                <a class="btn btn-success btn-sm" href="{% url 'note:note_list_range' range='index' %}" role="button">{{ tag.tag_name }}</a>
+              {% endfor %}
+              </div>
+              <a href="#" class="font-weight-bold">{{ note.title }}</a>
+              <p><span class="fw-bold">{{ note.created_by.username }}</span>の投稿</p>
+              <p>{{ note.content }}</p>
+              <p class="text-end">コメント数：{{ note.comments.count }}件</p>
+              <p class="text-end">
+                最終更新日：{% if note.comments.count == 0 %}{{ note.created_at }}
+                {% else %}
+                {% for comment in note.comments.all|slice:":1" %}
+                {{ comment.created_at }}
+                {% endfor %}
+                {% endif %}
+              </p>
+            {% endif %}
+          {% elif note.open_range == "subscribers" %}
+            {% if user.staff %}
+              <div class="open_range_note">
+                <a class="btn btn-success btn-sm" href="{% url 'note:note_list_range' range='index' %}" role="button">この投稿の範囲:すべて表示</a>
+              </div>
+              <div class="tag mt-1">
+              {% for tag in note.tags.all %}
+                <a class="btn btn-success btn-sm" href="{% url 'note:note_list_range' range='index' %}" role="button">{{ tag.tag_name }}</a>
+              {% endfor %}
+              </div>
+              <a href="#" class="font-weight-bold">{{ note.title }}</a>
+              <p><span class="fw-bold">{{ note.created_by.username }}</span>の投稿</p>
+              <p>{{ note.content }}</p>
+              <p class="text-end">コメント数：{{ note.comments.count }}件</p>
+              <p class="text-end">
+                最終更新日：{% if note.comments.count == 0 %}{{ note.created_at }}
+                {% else %}
+                {% for comment in note.comments.all|slice:":1" %}
+                {{ comment.created_at }}
+                {% endfor %}
+                {% endif %}
+              </p>
+            {% endif %}
+          {% else %}
+            <div class="open_range_note">
+              <a class="btn btn-success btn-sm" href="{% url 'note:note_list_range' range='index' %}" role="button">この投稿の範囲:すべて表示</a>
+            </div>
+            <div class="tag mt-1">
+            {% for tag in note.tags.all %}
+              <a class="btn btn-success btn-sm" href="{% url 'note:note_list_range' range='index' %}" role="button">{{ tag.tag_name }}</a>
+            {% endfor %}
+            </div>
+            <a href="#" class="font-weight-bold">{{ note.title }}</a>
+            <p><span class="fw-bold">{{ note.created_by.username }}</span>の投稿</p>
+            <p>{{ note.content }}</p>
+            <p class="text-end">コメント数：{{ note.comments.count }}件</p>
+            <p class="text-end">
+              最終更新日：{% if note.comments.count == 0 %}{{ note.created_at }}
+              {% else %}
+              {% for comment in note.comments.all|slice:":1" %}
+              {{ comment.created_at }}
+              {% endfor %}
+              {% endif %}
+            </p>
+          {% endif %}
+        {% endfor %}
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

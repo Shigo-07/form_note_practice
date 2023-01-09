@@ -1,0 +1,15 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <title>
+      {% block head_title %}{% endblock %}
+    </title>
+    {% include "style.html" %}
+</head>
+<body>
+{% include "navbar.html" %}
+{% block content %}
+{% endblock %}
+</body>
+</html>
