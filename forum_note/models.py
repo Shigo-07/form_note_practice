@@ -40,9 +40,21 @@ class Comment(models.Model):
     コメントモデル
     """
     content = models.TextField("コメント", blank=True)
+    is_publish_mail = models.BooleanField("メール発行", default=False)
     created_by = models.ForeignKey(settings.AUTH_USER_MODEL,
                                    verbose_name="投稿者",
                                    on_delete=models.CASCADE)
+    attach_file = models.FileField(
+        upload_to='uploads/%Y/%m/%d/',
+        verbose_name="添付ファイル",
+        blank=True,
+    )
+    attach_image = models.ImageField(
+        upload_to="images/%Y/%m/%d/",
+        verbose_name="添付画像",
+        blank=True,
+    )
+
     created_at = models.DateTimeField('投稿日', auto_now_add=True)
     updated_at = models.DateTimeField('更新日', auto_now=True)
     note_to = models.ForeignKey(Note, verbose_name="投稿", on_delete=models.CASCADE, related_name="comments")

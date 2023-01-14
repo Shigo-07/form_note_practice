@@ -19,9 +19,9 @@ from forum_note import views
 
 app_name = "note"
 urlpatterns = [
-    path("create/", views.NotePost, name="note_post"),
+    path("create/", views.NotePost.as_view(), name="note_post"),
     path("g/<slug:group>/", views.NoteListGroup.as_view(), name="note_list_group"),
     path("<slug:range>/", views.NoteListRange.as_view(), name="note_list_range"),
     path("tag/<slug:tag_word>/", views.NoteListTag.as_view(), name="note_list_tag"),
-    path("entry/<int:pk>/", views.NoteDetail, name="note_detail"),
+    path("entry/<int:pk>/", views.NoteDetail.as_view(), name="note_detail"),
 ]

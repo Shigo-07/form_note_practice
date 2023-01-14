@@ -1,0 +1,58 @@
+{% extends "base.html" %}
+{% load django_bootstrap5 %}
+{% block head_title %}投稿閲覧ページ{% endblock %}
+{% block content %}
+<div class="container mt-4 mb-4 border rounded pb-3">
+    <div class="note mt-3 pb-2 border-bottom">
+        <div class="open_range">
+
+        {% if note.open_range == "python_members" %}
+        <a href="{% url 'note:note_list_group' 'python_members' %}" class="btn btn-success btn-sm" role="button">
+           この投稿範囲：Pythonゼミ参加者
+        </a>
+        {% elif note.open_range == "subscribers" %}
+        <a href="{% url 'note:note_list_group' 'subscribers' %}" class="btn btn-success btn-sm" role="button">
+            この投稿範囲：定額コース利用者限定
+        </a>
+        {% elif note.open_range == "public" %}
+        <a href="{% url 'note:note_list_range' 'public' %}" class="btn btn-success btn-sm" role="button">
+            この投稿範囲：公開投稿
+        </a>
+        {% endif %}
+        </div>
+        <div class="tags mt-1 mb-3">
+            {% for tag in tags %}
+            <a href="{% url 'note:note_list_tag' tag.search_word %}" class="btn btn-danger btn-sm">{{ tag }}</a>
+            {% endfor %}
+        </div>
+        <h3 class="mb-3">{{ note.title }}</h3>
+        <div class="info">
+            <p>{{ note.created_by }}さんの投稿 <span class="date">{{ note.created_at }}</span></p>
+        </div>
+        <div class="content">
+            <p>{{ note.content }}</p>
+        </div>
+    </div>
+    <div class="comment_list">
+        {% for comment in comments %}
+        <div class="comment border-bottom pb-2 mt-3">
+            <div class="info">
+                <p>{{ comment.created_by }}さんの投稿 <span class="date">{{ comment.created_at }}</span></p>
+            </div>
+            <div class="content">
+                <p>{{ comment.content }}</p>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+    <div class="comment_add mt-3 pb-2">
+        <form method="post" enctype="multipart/form-data">
+            {% csrf_token %}
+            {% for field in form %}
+                {% bootstrap_field field %}
+            {% endfor %}
+            {% bootstrap_button button_type="submit" content="コメントする" %}
+        </form>
+    </div>
+</div>
+{% endblock %}
