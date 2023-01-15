@@ -47,12 +47,37 @@ class NewNoteForm(forms.Form):
 
 
 class CommentForm(forms.ModelForm):
+    attach_file = forms.FileField(label="添付", required=False)
+    attach_image = forms.ImageField(label="画像", required=False)
+
+    def validate_file_size(self, file):
+
+        if hasattr(file, "size"):
+            FILE_SIZE = 1 * 1000 * 1000
+            if file.size > FILE_SIZE:
+                print("over_file_size")
+                raise ValidationError(
+                    f'10MB以上のアップロードは禁止されています。※アップロードされたファイルサイズ：{file.size // 1000 // 1000}MB'
+                )
+
+    def clean_attach_file(self):
+
+        attach_file = self.cleaned_data["attach_file"]
+        self.validate_file_size(file=attach_file)
+        return attach_file
+
+    def clean_attach_image(self):
+
+        attach_image = self.cleaned_data["attach_image"]
+        self.validate_file_size(file=attach_image)
+        return attach_image
+
     class Meta:
         model = Comment
         fields = ('content', 'attach_file', 'attach_image', 'is_publish_mail')
         labels = {
             "content": "コメント:",
-            "attach_file": "添付:",
+            "attach_file":"添付:",
             "attach_image": "画像:",
             "is_publish_mail": "グループ向けの朝のサマリーメールに含める"
         }

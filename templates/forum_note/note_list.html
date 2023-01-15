@@ -43,7 +43,7 @@
           {% if note.open_range == "python_members"  %}
             {% if user.python_student %}
               <div class="open_range_note">
-                <a class="btn btn-success btn-sm" href="{% url 'note:note_list_range' range='index' %}" role="button">この投稿の範囲:Pythonゼミ参加者</a>
+                <a class="btn btn-success btn-sm" href="{% url 'note:note_list_group' group='python_members' %}" role="button">この投稿の範囲:Pythonゼミ参加者</a>
               </div>
               <div class="tag mt-1">
               {% for tag in note.tag_set.all %}
@@ -66,7 +66,7 @@
           {% elif note.open_range == "subscribers" %}
             {% if user.staff %}
               <div class="open_range_note">
-                <a class="btn btn-success btn-sm" href="{% url 'note:note_list_range' range='index' %}" role="button">この投稿の範囲:定額コース利用者限定</a>
+                <a class="btn btn-success btn-sm" href="{% url 'note:note_list_group' group='subscribers' %}" role="button">この投稿の範囲:定額コース利用者限定</a>
               </div>
               <div class="tag mt-1">
               {% for tag in note.tag_set.all %}
@@ -88,7 +88,7 @@
             {% endif %}
           {% else %}
             <div class="open_range_note">
-              <a class="btn btn-success btn-sm" href="{% url 'note:note_list_range' range='index' %}" role="button">この投稿の範囲:公開範囲</a>
+              <a class="btn btn-success btn-sm" href="{% url 'note:note_list_range' range='public' %}" role="button">この投稿の範囲:公開範囲</a>
             </div>
             <div class="tag mt-1">
               {% for tag in note.tag_set.all %}

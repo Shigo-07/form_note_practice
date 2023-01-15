@@ -35,6 +35,8 @@ INSTALLED_APPS = [
     "django.contrib.sessions",
     "django.contrib.messages",
     "django.contrib.staticfiles",
+    # crispy_forms
+    "crispy_forms",
     # bootstrap
     "django_bootstrap5",
     # django-extensions
@@ -140,6 +142,11 @@ ACCOUNT_USERNAME_REQUIRED = False
 ACCOUNT_AUTHENTICATION_METHOD = "email"
 ACCOUNT_EMAIL_REQUIRED = True
 
+from django.urls import reverse_lazy
+LOGIN_REDIRECT_URL = reverse_lazy('note:note_list_range',kwargs={"range":"index"})
+ACCOUNT_LOGOUT_REDIRECT_URL = reverse_lazy("account_login")
+ACCOUNT_LOGOUT_ON_GET = True
+
 # ログ設定
 LOGGING = {
     "version": 1,
@@ -157,3 +164,6 @@ LOGGING = {
         },
     }
 }
+
+# bootstrap
+CRISPY_TEMPLATE_PACK = 'bootstrap4'

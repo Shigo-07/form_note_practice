@@ -82,7 +82,7 @@ class NotePostPageTest(TestCase):
         response = self.client.post(url, create_data)
         self.assertContains(response, "許可されていない公開範囲です。")
 
-    # 10MB以上のファイルは投稿に失敗する
+    # 10MB以上のファイルは投稿に失敗するか
     def test_limit_10MB_file_upload(self):
         self.client.force_login(self.user)
         url = reverse("note:note_post")
@@ -371,3 +371,13 @@ class NoteDetailPageTest(TestCase):
     # 紐づけられたタグを表示しているか
 
     # 投稿範囲が表示されているか
+
+    # 10MB以上のファイルは投稿に失敗するか
+    def test_limit_10MB_file_upload(self):
+        self.client.force_login(self.user)
+        url = reverse("note:note_detail", kwargs={"pk": 1})
+        file_10mb = Path(__file__).parent.parent / "test_file" / "testdata-10MB"
+        with file_10mb.open(mode="rb") as f:
+            create_data = {"content": "file_upload", "attach_file": f}
+            response = self.client.post(url, create_data)
+        self.assertContains(response, "10MB以上のアップロードは禁止されています。")
