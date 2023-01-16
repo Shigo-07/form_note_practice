@@ -143,7 +143,8 @@ ACCOUNT_AUTHENTICATION_METHOD = "email"
 ACCOUNT_EMAIL_REQUIRED = True
 
 from django.urls import reverse_lazy
-LOGIN_REDIRECT_URL = reverse_lazy('note:note_list_range',kwargs={"range":"index"})
+
+LOGIN_REDIRECT_URL = reverse_lazy('note:note_list_range', kwargs={"range": "index"})
 ACCOUNT_LOGOUT_REDIRECT_URL = reverse_lazy("account_login")
 ACCOUNT_LOGOUT_ON_GET = True
 
@@ -167,3 +168,8 @@ LOGGING = {
 
 # bootstrap
 CRISPY_TEMPLATE_PACK = 'bootstrap4'
+
+# 公開範囲
+OPEN_RANGE_PYTHON = "python_members"
+OPEN_RANGE_SUBSCRIBE = "subscribers"
+OPEN_RANGE_PUBLIC = "public"
