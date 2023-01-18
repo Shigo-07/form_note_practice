@@ -54,7 +54,7 @@ coverage.xml
 # Django stuff:
 *.log
 local_settings.py
-
+get_random_secret_key.py
 # Flask stuff:
 instance/
 .webassets-cache
